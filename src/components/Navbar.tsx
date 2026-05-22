@@ -22,12 +22,14 @@ export function Navbar() {
     <nav className="bg-[#fcf8f2] text-[#4a4a4a] sticky top-0 z-50 py-4">
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         <div className="flex items-center justify-between h-14">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#8fae6a] rounded-xl flex items-center justify-center">
-               <BookOpen className="h-6 w-6 text-[#fcf8f2]" />
+          <Link to="/" className="flex items-center gap-3 group cursor-pointer decoration-transparent">
+            <div className="w-10 h-10 bg-[#8fae6a] rounded-xl flex items-center justify-center transition-all group-hover:scale-105 group-hover:shadow-md">
+               <svg className="h-6 w-6 text-[#fcf8f2]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                 <path d="M28 25 V75 M28 25 H52 A16 16 0 0 1 52 57 H28 M46 57 L62 75" stroke="currentColor" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round"/>
+               </svg>
             </div>
-            <span className="font-heading font-bold text-2xl tracking-tight text-[#4a4a4a]">Rajeev Classes</span>
-          </div>
+            <span className="font-heading font-bold text-2xl tracking-tight text-[#4a4a4a] group-hover:text-[#8fae6a] transition-colors">Rajeev Classes</span>
+          </Link>
           
           <div className="hidden md:block">
             <div className="flex items-baseline space-x-6">

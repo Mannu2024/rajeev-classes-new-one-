@@ -9,7 +9,9 @@ export function Footer() {
           <div>
             <h3 className="text-3xl font-heading font-black text-[#8fae6a] mb-6 flex items-center gap-3">
               <div className="w-10 h-10 bg-[#8fae6a] rounded-xl flex items-center justify-center">
-                 <BookOpen className="h-6 w-6 text-[#fcf8f2]" />
+                 <svg className="h-6 w-6 text-[#fcf8f2]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                   <path d="M28 25 V75 M28 25 H52 A16 16 0 0 1 52 57 H28 M46 57 L62 75" stroke="currentColor" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round"/>
+                 </svg>
               </div>
               <span>Rajeev Classes</span>
             </h3>
