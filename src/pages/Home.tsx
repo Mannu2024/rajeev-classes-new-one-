@@ -6,43 +6,48 @@ import { motion, AnimatePresence } from 'motion/react';
 const courses = [
   {
     title: 'Classes 1st to 5th',
-    subjects: 'All Subjects',
+    subjects: ['All Subjects'],
     icon: BookOpen,
     desc: 'Building a strong foundation with interactive and engaging learning methods.',
     bgColor: 'bg-[#f0c8e1]',
-    iconColor: 'text-[#cc72ac]'
+    iconColor: 'text-[#cc72ac]',
+    levels: ['K-5']
   },
   {
     title: 'Classes 6th to 9th',
-    subjects: 'Mathematics, Science, English, Social Science & all major subjects',
+    subjects: ['Mathematics', 'Science', 'English', 'Social Science', 'All Major Subjects'],
     icon: Atom,
     desc: 'Enhancing analytical skills and conceptual clarity for mid-level students.',
     bgColor: 'bg-[#d2def3]',
-    iconColor: 'text-[#779dda]'
+    iconColor: 'text-[#779dda]',
+    levels: ['6-9']
   },
   {
     title: 'Classes 9th & 10th',
-    subjects: 'Mathematics and Science',
+    subjects: ['Mathematics', 'Science'],
     icon: Calculator,
     desc: 'Focused preparation for board exams with rigorous practice and doubt clearing.',
     bgColor: 'bg-[#f6e191]',
-    iconColor: 'text-[#d7b224]'
+    iconColor: 'text-[#d7b224]',
+    levels: ['10-12', '6-9']
   },
   {
     title: '11th & 12th (Science)',
-    subjects: 'Mathematics, Biology and Computer Science',
+    subjects: ['Mathematics', 'Biology', 'Computer Science'],
     icon: Atom,
     desc: 'Advanced level coaching designed for competitive edge and board excellence.',
     bgColor: 'bg-[#d9ecd3]',
-    iconColor: 'text-[#8fae6a]'
+    iconColor: 'text-[#8fae6a]',
+    levels: ['10-12']
   },
   {
     title: '11th & 12th (Commerce)',
-    subjects: 'Accountancy, Economics and Business Studies',
+    subjects: ['Accountancy', 'Economics', 'Business Studies'],
     icon: FileText,
     desc: 'Comprehensive coverage of core commerce subjects with practical insights.',
     bgColor: 'bg-[#fcd2b0]',
-    iconColor: 'text-[#df8c4f]'
+    iconColor: 'text-[#df8c4f]',
+    levels: ['10-12']
   }
 ];
 
@@ -103,8 +108,28 @@ const galleryPhotos = [
 
 const categories = ['All', 'Classrooms', 'Study Spaces', 'Guidance'];
 
+const statsContainerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.12,
+    },
+  },
+};
+
+const statsItemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { type: 'spring', stiffness: 100, damping: 15 } 
+  },
+};
+
 export function Home() {
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCourseLevel, setSelectedCourseLevel] = useState('All');
   const [activePhoto, setActivePhoto] = useState<typeof galleryPhotos[0] | null>(null);
 
   return (
@@ -150,7 +175,13 @@ export function Home() {
         </motion.div>
 
         {/* Playful placeholder for characters */}
-        <div className="mt-20 w-full flex justify-center gap-6 flex-wrap relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="mt-20 w-full flex justify-center gap-6 flex-wrap relative z-10"
+        >
            {/* Doodle Character 1 */}
            <div className="w-40 h-40 bg-[#f0c8e1] rounded-full flex flex-col items-center justify-center shadow-sm border-4 border-[#cc72ac] transform -rotate-6">
              <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-[#cc72ac] text-4xl mb-2">🤓</div>
@@ -166,7 +197,7 @@ export function Home() {
              <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-[#d7b224] text-4xl mb-2">🤩</div>
              <span className="font-heading font-bold text-[#d7b224]">Grow</span>
            </div>
-        </div>
+        </motion.div>
 
       </section>
 
@@ -177,19 +208,34 @@ export function Home() {
              <path d="M0,20 Q250,50 500,20 T1000,20" fill="none" stroke="currentColor" strokeWidth="4" />
            </svg>
          </div>
-         <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center relative z-10">
+         <motion.div 
+            variants={statsContainerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center relative z-10"
+         >
             {stats.map((stat, idx) => (
-               <div key={idx} className="bg-[#fcf8f2] rounded-3xl p-6 shadow-sm border-4 border-[#f2eadc] transform transition-transform hover:-translate-y-1">
+               <motion.div 
+                  key={idx} 
+                  variants={statsItemVariants}
+                  className="bg-[#fcf8f2] rounded-3xl p-6 shadow-sm border-4 border-[#f2eadc] transform transition-transform hover:-translate-y-1"
+               >
                   <h3 className="text-4xl font-heading font-black text-[#8fae6a] mb-2">{stat.value}</h3>
                   <p className="text-sm font-bold text-gray-600 uppercase tracking-wider">{stat.label}</p>
-               </div>
+               </motion.div>
             ))}
-         </div>
+         </motion.div>
       </section>
 
       {/* Features / Why Choose Us with Sticker Image Style */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-8 relative grid lg:grid-cols-2 gap-16 items-center">
-         <div>
+         <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-130px" }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+         >
             <div className="inline-flex items-center gap-2 mb-4">
               <Sparkles className="w-6 h-6 text-[#f6e191]" />
               <h2 className="text-4xl font-heading font-black text-[#8fae6a]">Why Choose<br/>Rajeev Classes?</h2>
@@ -197,20 +243,42 @@ export function Home() {
             <p className="text-[#4a4a4a] text-lg mb-10 leading-relaxed font-medium">
                At Rajeev Classes, we don't just teach for exams; we teach for life. Here are a few reasons why students and parents trust us:
             </p>
-            <ul className="space-y-6">
+            <motion.ul 
+               initial="hidden"
+               whileInView="visible"
+               viewport={{ once: true, margin: "-100px" }}
+               variants={{
+                  hidden: { opacity: 0 },
+                  visible: { opacity: 1, transition: { staggerChildren: 0.08 } }
+               }}
+               className="space-y-6"
+            >
                {reasons.map((reason, idx) => (
-                  <li key={idx} className="flex items-start gap-4">
+                  <motion.li 
+                     key={idx} 
+                     variants={{
+                        hidden: { opacity: 0, x: -15 },
+                        visible: { opacity: 1, x: 0, transition: { duration: 0.4 } }
+                     }}
+                     className="flex items-start gap-4"
+                  >
                      <div className="w-8 h-8 rounded-full bg-[#f0c8e1] flex items-center justify-center shrink-0 mt-1">
                         <CheckCircle2 className="w-5 h-5 text-[#cc72ac]" />
                      </div>
                      <span className="text-lg font-bold text-[#4a4a4a]">{reason}</span>
-                  </li>
+                  </motion.li>
                ))}
-            </ul>
-         </div>
+            </motion.ul>
+         </motion.div>
 
          {/* Fun Sticker Images Container */}
-         <div className="relative h-[500px] hidden lg:block">
+         <motion.div 
+            initial={{ opacity: 0, scale: 0.92, rotate: -2 }}
+            whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+            viewport={{ once: true, margin: "-130px" }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="relative h-[500px] hidden lg:block"
+         >
             {/* Sticker 1 */}
             <div className="absolute top-0 right-10 w-64 h-64 bg-[#fcd2b0] rounded-[40px] transform rotate-6 border-4 border-[#df8c4f] shadow-sm flex flex-col items-center justify-center p-6 overflow-hidden">
                <div className="relative z-10 text-center flex flex-col items-center">
@@ -229,7 +297,7 @@ export function Home() {
                    <div className="w-12 h-12 bg-[#779dda] rounded-full flex items-center justify-center mb-2">
                      <Star className="w-6 h-6 text-white" />
                   </div>
-                 <p className="font-heading font-black text-[#567dba] text-2xl px-6 leading-tight drop-shadow-sm">Dedicated Faculty</p>
+                  <p className="font-heading font-black text-[#567dba] text-2xl px-6 leading-tight drop-shadow-sm">Dedicated Faculty</p>
                </div>
             </div>
             
@@ -237,49 +305,124 @@ export function Home() {
             <svg className="absolute top-1/2 left-1/4 w-32 h-32 text-[#f6e191]" viewBox="0 0 100 100">
                <path d="M10,90 Q50,10 90,90 M80,80 L100,90 M80,80 L85,60" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-         </div>
+         </motion.div>
       </section>
 
       {/* Courses Cards Section */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-8 relative z-10">
-         <div className="text-center mb-16 relative">
+         <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-6 relative"
+         >
             <h2 className="text-5xl font-heading font-black text-[#8fae6a]">K-12 Programs Offered</h2>
             {/* Little doodle */}
             <Pencil className="absolute -top-6 right-1/4 text-[#f0c8e1] w-10 h-10 rotate-45 hidden md:block" />
-         </div>
+            <p className="text-gray-600 font-medium text-lg max-w-xl mx-auto mt-4 leading-relaxed">
+               Filter by grade level to find the perfect customized academy batch details.
+            </p>
+         </motion.div>
 
-         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {courses.map((course, idx) => (
-               <div key={idx} className={`${course.bgColor} rounded-[40px] p-8 transform transition-transform hover:-translate-y-2 shadow-sm border-2 border-white`}>
-                  <div className="flex justify-between items-start mb-6">
-                     <div className="bg-white/50 p-4 rounded-2xl backdrop-blur-sm">
-                        <course.icon className={`w-8 h-8 ${course.iconColor}`} />
-                     </div>
-                     {idx % 2 === 0 && <Star className={`w-8 h-8 fill-white text-white opacity-50`} />}
-                  </div>
-                  <h3 className="text-2xl font-heading font-black text-[#4a4a4a] mb-3">{course.title}</h3>
-                  <div className="bg-white/60 text-[#4a4a4a] text-[13px] font-bold py-1 px-4 rounded-full inline-block mb-6 uppercase tracking-wider">
-                    {course.subjects}
-                  </div>
-                  <p className="text-gray-700 font-medium text-[15px] leading-relaxed">
-                     {course.desc}
-                  </p>
-               </div>
+         {/* Academic Level Filter Bar */}
+         <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="flex flex-wrap justify-center gap-3 mb-12"
+         >
+            {[
+               { id: 'All', label: 'All Programs' },
+               { id: 'K-5', label: 'Primary (1st-5th)' },
+               { id: '6-9', label: 'Middle (6th-9th)' },
+               { id: '10-12', label: 'High School (10th-12th)' }
+            ].map((levelItem) => (
+               <button
+                  key={levelItem.id}
+                  onClick={() => setSelectedCourseLevel(levelItem.id)}
+                  className={`px-6 py-2.5 text-sm font-heading font-bold rounded-full transition-all border outline-none cursor-pointer ${
+                     selectedCourseLevel === levelItem.id
+                        ? 'bg-[#8fae6a] border-[#8fae6a] text-white shadow-md scale-102 font-bold'
+                        : 'bg-white hover:bg-[#e8eddc] text-gray-650 border-[#f2eadc]'
+                  }`}
+               >
+                  {levelItem.label}
+               </button>
             ))}
-            
-            {/* Extra CTA Card */}
-            <div className="bg-[#f2eadc] rounded-[40px] p-8 flex flex-col items-center justify-center text-center border-4 border-dashed border-[#dcd1ba]">
-               <h3 className="text-3xl font-heading font-black text-[#8fae6a] mb-4 drop-shadow-sm">Ready to start learning?</h3>
-               <Link to="/admission" className="inline-flex items-center justify-center px-8 py-3.5 w-full font-heading font-bold rounded-full text-white bg-[#8fae6a] hover:bg-[#7b9858] transition-colors shadow-sm text-lg">
-                  Book Free Demo
-               </Link>
-            </div>
-         </div>
+         </motion.div>
+
+         <motion.div 
+            layout
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+         >
+            <AnimatePresence mode="popLayout">
+               {courses
+                  .filter((course) => selectedCourseLevel === 'All' || course.levels.includes(selectedCourseLevel))
+                  .map((course, idx) => (
+                     <motion.div 
+                        layout
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ duration: 0.35, ease: "easeInOut" }}
+                        key={course.title} 
+                        className={`${course.bgColor} rounded-[40px] p-8 transform transition-transform hover:-translate-y-2 shadow-sm border-2 border-white flex flex-col justify-between`}
+                     >
+                        <div>
+                           <div className="flex justify-between items-start mb-6">
+                              <div className="bg-white/50 p-4 rounded-2xl backdrop-blur-sm">
+                                 <course.icon className={`w-8 h-8 ${course.iconColor}`} />
+                              </div>
+                              {idx % 2 === 0 && <Star className={`w-8 h-8 fill-white text-white opacity-50`} />}
+                           </div>
+                           <h3 className="text-2xl font-heading font-black text-[#4a4a4a] mb-3">{course.title}</h3>
+                           <div className="flex flex-wrap gap-1.5 mb-6">
+                              {course.subjects.map((subject, sIdx) => (
+                                 <span 
+                                    key={sIdx} 
+                                    className="bg-white/85 hover:bg-white text-gray-700 text-xs font-bold px-3 py-1.5 rounded-xl border border-white/40 select-none shadow-xs transition-all duration-200"
+                                 >
+                                    {subject}
+                                 </span>
+                              ))}
+                           </div>
+                        </div>
+                        <p className="text-gray-700 font-medium text-[15px] leading-relaxed">
+                           {course.desc}
+                        </p>
+                     </motion.div>
+                  ))
+               }
+               
+               {/* Extra CTA Card */}
+               <motion.div 
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.35 }}
+                  key="extra-cta"
+                  className="bg-[#f2eadc] rounded-[40px] p-8 flex flex-col items-center justify-center text-center border-4 border-dashed border-[#dcd1ba]"
+               >
+                  <h3 className="text-3xl font-heading font-black text-[#8fae6a] mb-4 drop-shadow-sm">Ready to start learning?</h3>
+                  <Link to="/admission" className="inline-flex items-center justify-center px-8 py-3.5 w-full font-heading font-bold rounded-full text-white bg-[#8fae6a] hover:bg-[#7b9858] transition-colors shadow-sm text-lg">
+                     Book Free Demo
+                  </Link>
+               </motion.div>
+            </AnimatePresence>
+         </motion.div>
       </section>
 
       {/* Our Campus & Classroom Photo Gallery Section */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-8 relative z-10 border-t border-[#f2eadc]/60">
-         <div className="text-center mb-16 relative">
+         <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16 relative"
+         >
             <div className="inline-flex items-center gap-2 mb-4 bg-white px-4 py-1.5 rounded-full border border-[#8fae6a]/20 shadow-sm select-none">
               <ImageIcon className="w-5 h-5 text-[#8fae6a]" />
               <span className="text-sm font-heading font-bold text-[#8fae6a] uppercase tracking-wider">Our Environment</span>
@@ -288,10 +431,16 @@ export function Home() {
             <p className="text-gray-600 font-medium text-lg max-w-2xl mx-auto mt-4 leading-relaxed">
                Step inside New Delhi's premium learning hub, custom-tailored with spacious, joyful zones to foster focus, clarity, and growth.
             </p>
-         </div>
+         </motion.div>
 
          {/* Category Filters */}
-         <div className="flex flex-wrap justify-center gap-3 mb-12">
+         <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-wrap justify-center gap-3 mb-12"
+         >
             {categories.map((category) => (
                <button
                   key={category}
@@ -305,59 +454,69 @@ export function Home() {
                   {category}
                </button>
             ))}
-         </div>
+         </motion.div>
 
          {/* Polaroid Gallery Grid */}
-         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12 pt-6">
-            {galleryPhotos
-               .filter((photo) => selectedCategory === 'All' || photo.category === selectedCategory)
-               .map((photo, i) => {
-                  // Staggered angles for Polaroid flavor: index-based
-                  const angles = ['rotate-1', '-rotate-2', 'rotate-2', '-rotate-1', 'rotate-3', '-rotate-3'];
-                  const angleClass = angles[i % angles.length];
+         <motion.div 
+            layout
+            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12 pt-6"
+         >
+            <AnimatePresence mode="popLayout">
+               {galleryPhotos
+                  .filter((photo) => selectedCategory === 'All' || photo.category === selectedCategory)
+                  .map((photo, i) => {
+                     // Staggered angles for Polaroid flavor: index-based
+                     const angles = ['rotate-1', '-rotate-2', 'rotate-2', '-rotate-1', 'rotate-3', '-rotate-3'];
+                     const angleClass = angles[i % angles.length];
 
-                  return (
-                     <div
-                        key={i}
-                        className={`bg-white p-4 pb-6 rounded-2xl shadow-lg border-2 border-[#e8eddc] ${angleClass} hover:rotate-0 hover:scale-105 hover:shadow-2xl transition-all duration-300 cursor-pointer relative group flex flex-col justify-between`}
-                        onClick={() => setActivePhoto(photo)}
-                     >
-                        {/* Polaroid Tape Accent */}
-                        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-16 h-6 bg-yellow-100/70 border-x border-orange-200/40 rotate-1 backdrop-blur-xs z-20 group-hover:opacity-80 transition-opacity"></div>
+                     return (
+                        <motion.div
+                           layout
+                           initial={{ opacity: 0, scale: 0.9 }}
+                           animate={{ opacity: 1, scale: 1 }}
+                           exit={{ opacity: 0, scale: 0.9 }}
+                           transition={{ duration: 0.35 }}
+                           key={photo.title}
+                           className={`bg-white p-4 pb-6 rounded-2xl shadow-lg border-2 border-[#e8eddc] ${angleClass} hover:rotate-0 hover:scale-105 hover:shadow-2xl transition-all duration-300 cursor-pointer relative group flex flex-col justify-between`}
+                           onClick={() => setActivePhoto(photo)}
+                        >
+                           {/* Polaroid Tape Accent */}
+                           <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-16 h-6 bg-yellow-100/70 border-x border-orange-200/40 rotate-1 backdrop-blur-xs z-20 group-hover:opacity-80 transition-opacity"></div>
 
-                        {/* Image Container */}
-                        <div className="relative overflow-hidden rounded-lg aspect-[4/3] mb-4 bg-gray-100 border border-[#f2eadc] grow">
-                           <img
-                              src={photo.src}
-                              alt={photo.title}
-                              referrerPolicy="no-referrer"
-                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                           />
-                           {/* Hover overlay indicator */}
-                           <div className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                              <div className="bg-white/90 p-3 rounded-full shadow-sm text-gray-805">
-                                 <Maximize2 className="w-5 h-5 text-[#8fae6a]" />
+                           {/* Image Container */}
+                           <div className="relative overflow-hidden rounded-lg aspect-[4/3] mb-4 bg-gray-100 border border-[#f2eadc] grow">
+                              <img
+                                 src={photo.src}
+                                 alt={photo.title}
+                                 referrerPolicy="no-referrer"
+                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                              />
+                              {/* Hover overlay indicator */}
+                              <div className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                 <div className="bg-white/90 p-3 rounded-full shadow-sm text-gray-[805]">
+                                    <Maximize2 className="w-5 h-5 text-[#8fae6a]" />
+                                 </div>
                               </div>
+
+                              <span className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-xs text-[#8fae6a] text-[10px] font-black uppercase px-2.5 py-1 rounded-md border border-[#e8eddc]">
+                                 {photo.category}
+                              </span>
                            </div>
 
-                           <span className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-xs text-[#8fae6a] text-[10px] font-black uppercase px-2.5 py-1 rounded-md border border-[#e8eddc]">
-                              {photo.category}
-                           </span>
-                        </div>
-
-                        {/* Polaroid Caption Style */}
-                        <div className="px-1 shrink-0 pt-2">
-                           <h3 className="text-xl font-heading font-black text-gray-800 leading-tight mb-1.5 group-hover:text-[#8fae6a] transition-colors">
-                              {photo.title}
-                           </h3>
-                           <p className="text-gray-500 text-xs font-semibold leading-relaxed">
-                              {photo.desc}
-                           </p>
-                        </div>
-                     </div>
-                  );
-               })}
-         </div>
+                           {/* Polaroid Caption Style */}
+                           <div className="px-1 shrink-0 pt-2">
+                              <h3 className="text-xl font-heading font-black text-gray-800 leading-tight mb-1.5 group-hover:text-[#8fae6a] transition-colors">
+                                 {photo.title}
+                              </h3>
+                              <p className="text-gray-500 text-xs font-semibold leading-relaxed">
+                                 {photo.desc}
+                              </p>
+                           </div>
+                        </motion.div>
+                     );
+                  })}
+            </AnimatePresence>
+         </motion.div>
 
          {/* Lightbox Modal */}
          <AnimatePresence>
@@ -377,9 +536,15 @@ export function Home() {
                   </button>
 
                   <motion.div
-                     initial={{ scale: 0.95, y: 15 }}
-                     animate={{ scale: 1, y: 0 }}
-                     exit={{ scale: 0.95, y: 15 }}
+                     initial={{ scale: 0.85, opacity: 0, y: 30 }}
+                     animate={{ scale: 1, opacity: 1, y: 0 }}
+                     exit={{ scale: 0.85, opacity: 0, y: 30 }}
+                     transition={{ 
+                        type: "spring", 
+                        damping: 24, 
+                        stiffness: 220,
+                        mass: 0.9
+                     }}
                      className="bg-white rounded-[32px] overflow-hidden max-w-4xl w-full max-h-[90vh] flex flex-col md:flex-row shadow-2xl border-4 border-[#f2eadc]"
                      onClick={(e) => e.stopPropagation()}
                   >
@@ -456,7 +621,13 @@ export function Home() {
       </section>
 
       {/* Pre-footer Banner */}
-      <section className="bg-[#e8eddc] py-16 mt-12 rounded-t-[60px] max-w-7xl mx-auto relative overflow-hidden">
+      <motion.section 
+         initial={{ opacity: 0, scale: 0.96, y: 50 }}
+         whileInView={{ opacity: 1, scale: 1, y: 0 }}
+         viewport={{ once: true, margin: "-100px" }}
+         transition={{ duration: 0.8, ease: "easeOut" }}
+         className="bg-[#e8eddc] py-16 mt-12 rounded-t-[60px] max-w-7xl mx-auto relative overflow-hidden"
+      >
          <div className="text-center px-4 relative z-10">
             <h2 className="text-4xl md:text-5xl font-heading font-black text-[#8fae6a] mb-6">Join Rajeev Classes Today</h2>
             <p className="text-lg font-medium text-gray-700 mb-10 max-w-2xl mx-auto leading-relaxed">Get the best guidance for your child's future. Schedule your complimentary demo session and experience our teaching firsthand.</p>
@@ -476,7 +647,7 @@ export function Home() {
          <div className="absolute -bottom-6 -left-6 opacity-[0.08] pointer-events-none transform -rotate-12">
             <BookOpen className="w-64 h-64 text-[#8fae6a]" />
          </div>
-      </section>
+      </motion.section>
       
     </div>
   );

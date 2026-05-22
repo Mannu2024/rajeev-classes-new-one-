@@ -26,6 +26,8 @@ export function Admission() {
   const [demoMsg, setDemoMsg] = useState('');
   const [isDemoSubmitted, setIsDemoSubmitted] = useState(false);
   const [isDemoSubmitting, setIsDemoSubmitting] = useState(false);
+  const [demoStep, setDemoStep] = useState<1 | 2>(1);
+  const [demoErrors, setDemoErrors] = useState<{ name?: string; phone?: string; class?: string; subject?: string }>({});
 
   // Tab B - AI Advisor fields
   const [aiClass, setAiClass] = useState('');
@@ -60,10 +62,49 @@ export function Admission() {
     return () => clearInterval(interval);
   }, [selectedEventId]);
 
+  const validateStep1 = () => {
+    const errs: { name?: string; phone?: string } = {};
+    if (!demoName.trim()) {
+      errs.name = "Student's full name is required";
+    }
+    const cleanPhone = demoPhone.replace(/\D/g, '');
+    if (!demoPhone.trim()) {
+      errs.phone = "Mobile contact number is required";
+    } else if (cleanPhone.length < 10) {
+      errs.phone = "Phone number should be at least 10 digits";
+    }
+    setDemoErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const handleNextStep = () => {
+    if (validateStep1()) {
+      setDemoStep(2);
+    }
+  };
+
   // Handle book demo form submit
   const handleDemoSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!demoName || !demoPhone || !demoClass) return;
+    if (demoStep === 1) {
+      if (validateStep1()) {
+        setDemoStep(2);
+      }
+      return;
+    }
+
+    // Step 2 validation
+    const errs: { class?: string; subject?: string } = {};
+    if (!demoClass) {
+      errs.class = "Please select current academic standard";
+    }
+    if (!demoSubject.trim()) {
+      errs.subject = "Please enter subjects of interest";
+    }
+    if (Object.keys(errs).length > 0) {
+      setDemoErrors(prev => ({ ...prev, ...errs }));
+      return;
+    }
 
     setIsDemoSubmitting(true);
     try {
@@ -88,6 +129,8 @@ export function Admission() {
         setDemoClass('');
         setDemoSubject('');
         setDemoMsg('');
+        setDemoStep(1);
+        setDemoErrors({});
       } else {
         alert('Failed to submit, please try again or call our direct helpline.');
       }
@@ -355,104 +398,223 @@ Currently, our heavy-duty analytical counselors are busy, but here is your insta
                         Rajeev Sir's team will contact you shortly to lock your seat timing and subject goals.
                       </p>
                       <button 
-                        onClick={() => setIsDemoSubmitted(false)}
-                        className="bg-[#8fae6a] text-white px-8 py-3.5 rounded-full font-heading font-bold hover:bg-[#7b9858] transition-colors shadow-sm"
+                        onClick={() => {
+                          setIsDemoSubmitted(false);
+                          setDemoStep(1);
+                        }}
+                        className="bg-[#8fae6a] text-white px-8 py-3.5 rounded-full font-heading font-bold hover:bg-[#7b9858] transition-colors shadow-sm cursor-pointer"
                       >
                         Submit Another Demo Class Booking
                       </button>
                     </motion.div>
                   ) : (
                     <form onSubmit={handleDemoSubmit} className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <label htmlFor="student-name" className="block text-sm font-bold text-gray-700 mb-2">Student Name *</label>
-                          <input 
-                            type="text" 
-                            id="student-name" 
-                            required 
-                            value={demoName}
-                            onChange={(e) => setDemoName(e.target.value)}
-                            className="w-full bg-[#fcf8f2] border-2 border-[#e8eddc] rounded-2xl px-4 py-3.5 focus:border-[#8fae6a] outline-none font-medium text-gray-700 transition-all placeholder-gray-400"
-                            placeholder="Full name of student"
-                          />
+                      
+                      {/* Progress Bar & Steps Badges */}
+                      <div className="bg-[#fefcf8] border-2 border-[#f2eadc] rounded-3xl p-5 shadow-xs mb-8">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                          <div className="flex items-center gap-3">
+                            <span className="w-8 h-8 rounded-full bg-[#8fae6a] text-white flex items-center justify-center font-heading font-black text-sm shadow-xs select-none">
+                              {demoStep}
+                            </span>
+                            <div>
+                              <h4 className="text-sm font-heading font-black text-gray-800 uppercase tracking-wider">
+                                {demoStep === 1 ? "Step 1: Contact Details" : "Step 2: Goals & Academic level"}
+                              </h4>
+                              <p className="text-xs font-semibold text-gray-500">
+                                {demoStep === 1 ? "Let us know who we are reaching out to" : "Customize your demo timings and target subjects"}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="bg-[#e8eddc] px-3.5 py-1.5 rounded-full border border-[#8fae6a]/20 shrink-0 text-center">
+                            <span className="text-xs font-heading font-black text-[#688544] uppercase tracking-wider">
+                              {demoStep === 1 ? "50% Complete" : "Almost there!"}
+                            </span>
+                          </div>
                         </div>
-                        <div>
-                          <label htmlFor="student-phone" className="block text-sm font-bold text-gray-700 mb-2">Phone Number *</label>
-                          <input 
-                            type="tel" 
-                            id="student-phone" 
-                            required 
-                            value={demoPhone}
-                            onChange={(e) => setDemoPhone(e.target.value)}
-                            className="w-full bg-[#fcf8f2] border-2 border-[#e8eddc] rounded-2xl px-4 py-3.5 focus:border-[#8fae6a] outline-none font-medium text-gray-700 transition-all placeholder-gray-400"
-                            placeholder="10-digit primary mobile contact"
+                        
+                        <div className="w-full bg-[#f2eadc] rounded-full h-3 overflow-hidden relative font-sans">
+                          <motion.div 
+                            className="absolute top-0 left-0 bg-[#8fae6a] h-full rounded-full"
+                            initial={{ width: "50%" }}
+                            animate={{ width: demoStep === 1 ? "50%" : "100%" }}
+                            transition={{ type: "spring", stiffness: 120, damping: 14 }}
                           />
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <label htmlFor="student-class" className="block text-sm font-bold text-gray-700 mb-2">Class / Academic standard *</label>
-                          <select 
-                            id="student-class" 
-                            required 
-                            value={demoClass}
-                            onChange={(e) => setDemoClass(e.target.value)}
-                            className="w-full bg-[#fcf8f2] border-2 border-[#e8eddc] rounded-2xl px-4 py-3.5 focus:border-[#8fae6a] outline-none font-bold text-gray-700 transition-all appearance-none cursor-pointer"
+                      <AnimatePresence mode="wait">
+                        {demoStep === 1 ? (
+                          <motion.div
+                            key="step1"
+                            initial={{ opacity: 0, x: -15 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: 15 }}
+                            transition={{ duration: 0.25 }}
+                            className="space-y-6"
                           >
-                            <option value="">Select current class</option>
-                            <option value="1-5">Classes 1st to 5th (Foundation)</option>
-                            <option value="6-9">Classes 6th to 9th (Analytical)</option>
-                            <option value="9-10">Classes 9th & 10th (Boards Core Preparation)</option>
-                            <option value="11">Class 11th (Stream Launch)</option>
-                            <option value="12">Class 12th (Boards Focus)</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label htmlFor="student-subject" className="block text-sm font-bold text-gray-700 mb-2">Subjects interested *</label>
-                          <input 
-                            type="text" 
-                            id="student-subject" 
-                            required 
-                            value={demoSubject}
-                            onChange={(e) => setDemoSubject(e.target.value)}
-                            className="w-full bg-[#fcf8f2] border-2 border-[#e8eddc] rounded-2xl px-4 py-3.5 focus:border-[#8fae6a] outline-none font-medium text-gray-700 transition-all placeholder-gray-400"
-                            placeholder="e.g. Mathematics, Science, Accountancy"
-                          />
-                        </div>
-                      </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                              <div>
+                                <label htmlFor="student-name" className="block text-sm font-bold text-gray-700 mb-2">Student Name *</label>
+                                <input 
+                                  type="text" 
+                                  id="student-name" 
+                                  value={demoName}
+                                  onChange={(e) => {
+                                    setDemoName(e.target.value);
+                                    if (demoErrors.name) setDemoErrors(prev => ({ ...prev, name: undefined }));
+                                  }}
+                                  className={`w-full bg-[#fcf8f2] border-2 rounded-2xl px-4 py-3.5 focus:border-[#8fae6a] outline-none font-medium text-gray-700 transition-all placeholder-gray-400 ${
+                                    demoErrors.name ? 'border-red-400 focus:border-red-500 bg-red-50/10' : 'border-[#e8eddc]'
+                                  }`}
+                                  placeholder="Full name of student"
+                                />
+                                {demoErrors.name && (
+                                  <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-red-500 font-bold mt-2 flex items-center gap-1.5">
+                                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                                    {demoErrors.name}
+                                  </motion.p>
+                                )}
+                              </div>
+                              <div>
+                                <label htmlFor="student-phone" className="block text-sm font-bold text-gray-700 mb-2">Phone Number *</label>
+                                <input 
+                                  type="tel" 
+                                  id="student-phone" 
+                                  value={demoPhone}
+                                  onChange={(e) => {
+                                    setDemoPhone(e.target.value);
+                                    if (demoErrors.phone) setDemoErrors(prev => ({ ...prev, phone: undefined }));
+                                  }}
+                                  className={`w-full bg-[#fcf8f2] border-2 rounded-2xl px-4 py-3.5 focus:border-[#8fae6a] outline-none font-medium text-gray-700 transition-all placeholder-gray-400 ${
+                                    demoErrors.phone ? 'border-red-400 focus:border-red-500 bg-red-50/10' : 'border-[#e8eddc]'
+                                  }`}
+                                  placeholder="10-digit primary mobile contact"
+                                />
+                                {demoErrors.phone && (
+                                  <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-red-500 font-bold mt-2 flex items-center gap-1.5">
+                                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                                    {demoErrors.phone}
+                                  </motion.p>
+                                )}
+                              </div>
+                            </div>
 
-                      <div>
-                        <label htmlFor="student-msg" className="block text-sm font-bold text-gray-700 mb-2">Remarks or custom time goals (Optional)</label>
-                        <textarea 
-                          id="student-msg" 
-                          rows={3}
-                          value={demoMsg}
-                          onChange={(e) => setDemoMsg(e.target.value)}
-                          className="w-full bg-[#fcf8f2] border-2 border-[#e8eddc] rounded-2xl px-4 py-3.5 focus:border-[#8fae6a] outline-none font-medium text-gray-700 transition-all placeholder-gray-400 resize-none"
-                          placeholder="Tell us about specific goals such as CBSE board scoring 95%+, overcoming math anxiety..."
-                        ></textarea>
-                      </div>
+                            <div className="pt-4 flex justify-end">
+                              <button
+                                type="button"
+                                onClick={handleNextStep}
+                                className="px-8 py-3.5 bg-[#8fae6a] hover:bg-[#7b9858] text-white font-heading font-black rounded-full text-base shadow-sm transition-all transform hover:-translate-y-0.5 flex items-center gap-2 cursor-pointer"
+                              >
+                                Next Step
+                                <ArrowRight className="w-5 h-5 shrink-0" />
+                              </button>
+                            </div>
+                          </motion.div>
+                        ) : (
+                          <motion.div
+                            key="step2"
+                            initial={{ opacity: 0, x: 15 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -15 }}
+                            transition={{ duration: 0.25 }}
+                            className="space-y-6"
+                          >
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                              <div>
+                                <label htmlFor="student-class" className="block text-sm font-bold text-gray-700 mb-2">Class / Academic standard *</label>
+                                <select 
+                                  id="student-class" 
+                                  value={demoClass}
+                                  onChange={(e) => {
+                                    setDemoClass(e.target.value);
+                                    if (demoErrors.class) setDemoErrors(prev => ({ ...prev, class: undefined }));
+                                  }}
+                                  className={`w-full bg-[#fcf8f2] border-2 rounded-2xl px-4 py-3.5 focus:border-[#8fae6a] outline-none font-bold text-gray-700 transition-all appearance-none cursor-pointer ${
+                                    demoErrors.class ? 'border-red-400 focus:border-red-500 bg-red-50/10' : 'border-[#e8eddc]'
+                                  }`}
+                                >
+                                  <option value="">Select current class</option>
+                                  <option value="1-5">Classes 1st to 5th (Foundation)</option>
+                                  <option value="6-9">Classes 6th to 9th (Analytical)</option>
+                                  <option value="9-10">Classes 9th & 10th (Boards Core Preparation)</option>
+                                  <option value="11">Class 11th (Stream Launch)</option>
+                                  <option value="12">Class 12th (Boards Focus)</option>
+                                </select>
+                                {demoErrors.class && (
+                                  <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-red-500 font-bold mt-2 flex items-center gap-1.5">
+                                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                                    {demoErrors.class}
+                                  </motion.p>
+                                )}
+                              </div>
+                              <div>
+                                <label htmlFor="student-subject" className="block text-sm font-bold text-gray-700 mb-2">Subjects interested *</label>
+                                <input 
+                                  type="text" 
+                                  id="student-subject" 
+                                  value={demoSubject}
+                                  onChange={(e) => {
+                                    setDemoSubject(e.target.value);
+                                    if (demoErrors.subject) setDemoErrors(prev => ({ ...prev, subject: undefined }));
+                                  }}
+                                  className={`w-full bg-[#fcf8f2] border-2 rounded-2xl px-4 py-3.5 focus:border-[#8fae6a] outline-none font-medium text-gray-700 transition-all placeholder-gray-400 ${
+                                    demoErrors.subject ? 'border-red-400 focus:border-red-500 bg-red-50/10' : 'border-[#e8eddc]'
+                                  }`}
+                                  placeholder="e.g. Mathematics, Science, Accountancy"
+                                />
+                                {demoErrors.subject && (
+                                  <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-red-500 font-bold mt-2 flex items-center gap-1.5">
+                                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                                    {demoErrors.subject}
+                                  </motion.p>
+                                )}
+                              </div>
+                            </div>
 
-                      <div className="pt-4">
-                        <button 
-                          type="submit" 
-                          disabled={isDemoSubmitting}
-                          className="w-full bg-[#8fae6a] hover:bg-[#7b9858] disabled:bg-gray-400 text-white font-heading font-black py-4 rounded-full text-lg shadow-sm transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
-                        >
-                          {isDemoSubmitting ? (
-                            <>
-                              <Loader2 className="w-5 h-5 animate-spin" />
-                              Submitting details securely...
-                            </>
-                          ) : (
-                            <>
-                              <Send className="w-5 h-5 shrink-0" />
-                              Book Free Demo Class Session
-                            </>
-                          )}
-                        </button>
-                      </div>
+                            <div>
+                              <label htmlFor="student-msg" className="block text-sm font-bold text-gray-700 mb-2">Remarks or custom time goals (Optional)</label>
+                              <textarea 
+                                id="student-msg" 
+                                rows={3}
+                                value={demoMsg}
+                                onChange={(e) => setDemoMsg(e.target.value)}
+                                className="w-full bg-[#fcf8f2] border-2 border-[#e8eddc] rounded-2xl px-4 py-3.5 focus:border-[#8fae6a] outline-none font-medium text-gray-700 transition-all placeholder-gray-400 resize-none"
+                                placeholder="Tell us about specific goals such as CBSE board scoring 95%+, overcoming math anxiety..."
+                              ></textarea>
+                            </div>
+
+                            <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                              <button
+                                type="button"
+                                onClick={() => setDemoStep(1)}
+                                className="w-full sm:w-auto px-6 py-3 border-2 border-[#e8eddc] hover:bg-[#fcf8f2] text-gray-500 hover:text-gray-700 font-heading font-black rounded-full text-sm transition-all cursor-pointer"
+                              >
+                                Back to Step 1
+                              </button>
+
+                              <button 
+                                type="submit" 
+                                disabled={isDemoSubmitting}
+                                className="w-full sm:w-auto bg-[#8fae6a] hover:bg-[#7b9858] disabled:bg-gray-400 text-white font-heading font-black px-8 py-3.5 rounded-full text-base shadow-sm transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer"
+                              >
+                                {isDemoSubmitting ? (
+                                  <>
+                                    <Loader2 className="w-5 h-5 animate-spin" />
+                                    Submitting details securely...
+                                  </>
+                                ) : (
+                                  <>
+                                    <Send className="w-5 h-5 shrink-0" />
+                                    Book Free Demo Class Session
+                                  </>
+                                )}
+                              </button>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+
                     </form>
                   )}
                 </div>

@@ -7,7 +7,7 @@ import { motion } from 'motion/react';
 const courses = [
   {
     title: 'Classes 1st to 5th',
-    subjects: 'All Subjects',
+    subjects: ['All Subjects'],
     icon: BookOpen,
     desc: 'Building a strong foundation with interactive and engaging learning methods.',
     bgColor: 'bg-[#f0c8e1]',
@@ -15,7 +15,7 @@ const courses = [
   },
   {
     title: 'Classes 6th to 9th',
-    subjects: 'Mathematics, Science, English, Social Science & all major subjects',
+    subjects: ['Mathematics', 'Science', 'English', 'Social Science', 'All Major Subjects'],
     icon: Atom,
     desc: 'Enhancing analytical skills and conceptual clarity for mid-level students.',
     bgColor: 'bg-[#d2def3]',
@@ -23,7 +23,7 @@ const courses = [
   },
   {
     title: 'Classes 9th & 10th',
-    subjects: 'Mathematics and Science',
+    subjects: ['Mathematics', 'Science'],
     icon: Calculator,
     desc: 'Focused preparation for board exams with rigorous practice and doubt clearing.',
     bgColor: 'bg-[#f6e191]',
@@ -31,7 +31,7 @@ const courses = [
   },
   {
     title: '11th & 12th (Science)',
-    subjects: 'Mathematics, Biology and Computer Science',
+    subjects: ['Mathematics', 'Biology', 'Computer Science'],
     icon: Atom,
     desc: 'Advanced level coaching designed for competitive edge and board excellence.',
     bgColor: 'bg-[#d9ecd3]',
@@ -39,7 +39,7 @@ const courses = [
   },
   {
     title: '11th & 12th (Commerce)',
-    subjects: 'Accountancy, Economics and Business Studies',
+    subjects: ['Accountancy', 'Economics', 'Business Studies'],
     icon: FileText,
     desc: 'Comprehensive coverage of core commerce subjects with practical insights.',
     bgColor: 'bg-[#fcd2b0]',
@@ -207,8 +207,15 @@ export function Home() {
                      {idx % 2 === 0 && <Star className={\`w-8 h-8 fill-white text-white opacity-50\`} />}
                   </div>
                   <h3 className="text-2xl font-heading font-black text-[#4a4a4a] mb-2">{course.title}</h3>
-                  <div className="bg-white/60 text-[#4a4a4a] text-sm font-bold py-1.5 px-4 rounded-full inline-block mb-6">
-                    {course.subjects}
+                  <div className="flex flex-wrap gap-1.5 mb-6">
+                     {course.subjects.map((subject, sIdx) => (
+                        <span 
+                           key={sIdx} 
+                           className="bg-white/85 hover:bg-white text-gray-700 text-xs font-bold px-3 py-1.5 rounded-xl border border-white/40 select-none shadow-xs transition-all duration-200"
+                        >
+                           {subject}
+                        </span>
+                     ))}
                   </div>
                   <p className="text-gray-700 font-medium text-[15px] leading-relaxed">
                      {course.desc}
