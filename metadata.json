@@ -1,0 +1,10 @@
+{
+  "name": "Remix: Rajeev Classes",
+  "description": "A modern, attractive, fully responsive coaching centre website for Rajeev Classes.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

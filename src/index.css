@@ -1,0 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Fredoka", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background-color: #fcf8f2;
+  color: #4a4a4a;
+}
