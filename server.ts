@@ -150,7 +150,7 @@ Based on a student in **${grade}** interested in **${interests || "General Studi
   }
 
   try {
-    const prompt = `You are the Expert AI Academic Counselor and Mentor at "Rajeev Classes", a premium, friendly, highly successful coaching center in New Delhi for school students of Classes 1st to 12th.
+    const prompt = `You are the Expert AI Academic Counselor and Mentor at "Rajeev Classes", a premium, friendly, highly successful coaching center in New Delhi for K-12.
 A student in: **${grade}**
 Enjoys / interests: **${interests || "General scientific studies and logic"}**
 Primary goals: **${studyGoals || "Excel in school midterms, master concepts, build good character"}**

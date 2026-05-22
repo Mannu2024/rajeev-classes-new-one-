@@ -1,7 +1,7 @@
-import React from 'react';
-import { BookOpen, Calculator, Atom, FileText, CheckCircle2, Star, Sparkles, Pencil } from 'lucide-react';
+import React, { useState } from 'react';
+import { BookOpen, Calculator, Atom, FileText, CheckCircle2, Star, Sparkles, Pencil, X, Maximize2, Image as ImageIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 
 const courses = [
   {
@@ -62,7 +62,51 @@ const reasons = [
   "Focus on Intelligence & Character Building",
 ];
 
+const galleryPhotos = [
+  {
+    src: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&q=80&w=800',
+    category: 'Classrooms',
+    title: 'Smart Learning Spaces',
+    desc: 'Bright, colorful air-conditioned chambers designed to make conceptual learning engaging.'
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&q=80&w=800',
+    category: 'Study Spaces',
+    title: 'Self-Study Library',
+    desc: 'Fully loaded with NCERT questions, CBSE past year solutions, and standard reference guides.'
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800',
+    category: 'Guidance',
+    title: 'One-on-One Mentorship',
+    desc: 'Where personal doubts are simplified and standard exam roadmaps are built with Rajeev Sir.'
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800',
+    category: 'Classrooms',
+    title: 'Doubt Clearing Circles',
+    desc: 'Collaborative desk sessions where school homework doubts are tackled and solved together.'
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800',
+    category: 'Study Spaces',
+    title: 'Interactive Practice Desk',
+    desc: 'Equipped with digital assessments to practice mock chapters under real board exam timers.'
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=800',
+    category: 'Guidance',
+    title: 'Direct Counsel Desks',
+    desc: 'Regular counseling to guide students over exam blockages and test stress seamlessly.'
+  }
+];
+
+const categories = ['All', 'Classrooms', 'Study Spaces', 'Guidance'];
+
 export function Home() {
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [activePhoto, setActivePhoto] = useState<typeof galleryPhotos[0] | null>(null);
+
   return (
     <div className="w-full relative overflow-hidden bg-[#fcf8f2] text-[#4a4a4a]">
 
@@ -80,7 +124,7 @@ export function Home() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="w-full relative">
           <div className="relative inline-block mb-8">
             <h1 className="text-5xl md:text-7xl font-heading font-black text-[#8fae6a] leading-[1.1] z-10 relative">
-              Quality Coaching for School Students <br/> from Class 1st to 12th
+              Quality Coaching for K-12
             </h1>
             {/* Hand-drawn scribble under heading */}
             <svg className="absolute -bottom-6 left-0 w-full h-8 text-[#f6e191] -z-10" viewBox="0 0 400 20" preserveAspectRatio="none">
@@ -199,7 +243,7 @@ export function Home() {
       {/* Courses Cards Section */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-8 relative z-10">
          <div className="text-center mb-16 relative">
-            <h2 className="text-5xl font-heading font-black text-[#8fae6a]">Courses Offered</h2>
+            <h2 className="text-5xl font-heading font-black text-[#8fae6a]">K-12 Programs Offered</h2>
             {/* Little doodle */}
             <Pencil className="absolute -top-6 right-1/4 text-[#f0c8e1] w-10 h-10 rotate-45 hidden md:block" />
          </div>
@@ -231,6 +275,184 @@ export function Home() {
                </Link>
             </div>
          </div>
+      </section>
+
+      {/* Our Campus & Classroom Photo Gallery Section */}
+      <section className="py-24 max-w-7xl mx-auto px-4 sm:px-8 relative z-10 border-t border-[#f2eadc]/60">
+         <div className="text-center mb-16 relative">
+            <div className="inline-flex items-center gap-2 mb-4 bg-white px-4 py-1.5 rounded-full border border-[#8fae6a]/20 shadow-sm select-none">
+              <ImageIcon className="w-5 h-5 text-[#8fae6a]" />
+              <span className="text-sm font-heading font-bold text-[#8fae6a] uppercase tracking-wider">Our Environment</span>
+            </div>
+            <h2 className="text-5xl font-heading font-black text-[#8fae6a] leading-tight">Our Campus & Classroom</h2>
+            <p className="text-gray-600 font-medium text-lg max-w-2xl mx-auto mt-4 leading-relaxed">
+               Step inside New Delhi's premium learning hub, custom-tailored with spacious, joyful zones to foster focus, clarity, and growth.
+            </p>
+         </div>
+
+         {/* Category Filters */}
+         <div className="flex flex-wrap justify-center gap-3 mb-12">
+            {categories.map((category) => (
+               <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-6 py-2.5 text-sm font-heading font-bold rounded-full transition-all border outline-none cursor-pointer ${
+                     selectedCategory === category
+                        ? 'bg-[#8fae6a] border-[#8fae6a] text-white shadow-md'
+                        : 'bg-white hover:bg-[#e8eddc] text-gray-600 border-[#f2eadc]'
+                  }`}
+               >
+                  {category}
+               </button>
+            ))}
+         </div>
+
+         {/* Polaroid Gallery Grid */}
+         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12 pt-6">
+            {galleryPhotos
+               .filter((photo) => selectedCategory === 'All' || photo.category === selectedCategory)
+               .map((photo, i) => {
+                  // Staggered angles for Polaroid flavor: index-based
+                  const angles = ['rotate-1', '-rotate-2', 'rotate-2', '-rotate-1', 'rotate-3', '-rotate-3'];
+                  const angleClass = angles[i % angles.length];
+
+                  return (
+                     <div
+                        key={i}
+                        className={`bg-white p-4 pb-6 rounded-2xl shadow-lg border-2 border-[#e8eddc] ${angleClass} hover:rotate-0 hover:scale-105 hover:shadow-2xl transition-all duration-300 cursor-pointer relative group flex flex-col justify-between`}
+                        onClick={() => setActivePhoto(photo)}
+                     >
+                        {/* Polaroid Tape Accent */}
+                        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-16 h-6 bg-yellow-100/70 border-x border-orange-200/40 rotate-1 backdrop-blur-xs z-20 group-hover:opacity-80 transition-opacity"></div>
+
+                        {/* Image Container */}
+                        <div className="relative overflow-hidden rounded-lg aspect-[4/3] mb-4 bg-gray-100 border border-[#f2eadc] grow">
+                           <img
+                              src={photo.src}
+                              alt={photo.title}
+                              referrerPolicy="no-referrer"
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                           />
+                           {/* Hover overlay indicator */}
+                           <div className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                              <div className="bg-white/90 p-3 rounded-full shadow-sm text-gray-805">
+                                 <Maximize2 className="w-5 h-5 text-[#8fae6a]" />
+                              </div>
+                           </div>
+
+                           <span className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-xs text-[#8fae6a] text-[10px] font-black uppercase px-2.5 py-1 rounded-md border border-[#e8eddc]">
+                              {photo.category}
+                           </span>
+                        </div>
+
+                        {/* Polaroid Caption Style */}
+                        <div className="px-1 shrink-0 pt-2">
+                           <h3 className="text-xl font-heading font-black text-gray-800 leading-tight mb-1.5 group-hover:text-[#8fae6a] transition-colors">
+                              {photo.title}
+                           </h3>
+                           <p className="text-gray-500 text-xs font-semibold leading-relaxed">
+                              {photo.desc}
+                           </p>
+                        </div>
+                     </div>
+                  );
+               })}
+         </div>
+
+         {/* Lightbox Modal */}
+         <AnimatePresence>
+            {activePhoto && (
+               <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4"
+                  onClick={() => setActivePhoto(null)}
+               >
+                  <button
+                     onClick={() => setActivePhoto(null)}
+                     className="absolute top-6 right-6 p-3 bg-white/10 hover:bg-white/20 text-white hover:text-[#f6e191] rounded-full transition-all border border-white/20 hover:border-white/40 z-50"
+                  >
+                     <X className="w-6 h-6" />
+                  </button>
+
+                  <motion.div
+                     initial={{ scale: 0.95, y: 15 }}
+                     animate={{ scale: 1, y: 0 }}
+                     exit={{ scale: 0.95, y: 15 }}
+                     className="bg-white rounded-[32px] overflow-hidden max-w-4xl w-full max-h-[90vh] flex flex-col md:flex-row shadow-2xl border-4 border-[#f2eadc]"
+                     onClick={(e) => e.stopPropagation()}
+                  >
+                     {/* Image View */}
+                     <div className="md:w-3/5 bg-gray-900 flex items-center justify-center relative min-h-[300px] max-h-[50vh] md:max-h-[80vh] overflow-hidden">
+                        <img
+                           src={activePhoto.src}
+                           alt={activePhoto.title}
+                           referrerPolicy="no-referrer"
+                           className="w-full h-full object-cover"
+                        />
+                        <div className="absolute top-4 left-4 bg-[#8fae6a] text-white text-[11px] font-black uppercase px-3 py-1 rounded-full shadow-sm">
+                           {activePhoto.category}
+                        </div>
+                     </div>
+
+                     {/* Details Frame */}
+                     <div className="md:w-2/5 p-8 flex flex-col justify-between bg-[#fcf8f2] relative">
+                        {/* Tiny decorative doodle illustration */}
+                        <div className="absolute top-6 right-6 opacity-10">
+                           <Star className="w-16 h-16 text-[#cc72ac] fill-[#cc72ac]" />
+                        </div>
+
+                        <div className="space-y-4">
+                           <span className="text-xs font-black uppercase text-[#8fae6a] tracking-wider block">Rajeev Classes Environment</span>
+                           <h3 className="text-3xl font-heading font-black text-gray-800 leading-tight">
+                              {activePhoto.title}
+                           </h3>
+                           <p className="text-gray-600 text-[15px] font-medium leading-relaxed">
+                              {activePhoto.desc}
+                           </p>
+
+                           <div className="bg-white/80 p-4 border border-[#e8eddc] rounded-2xl space-y-2">
+                              <h4 className="text-xs font-black uppercase text-gray-500 tracking-wider">Facility Highlights</h4>
+                              <div className="grid grid-cols-2 gap-2 text-xs font-bold text-gray-600">
+                                 <div className="flex items-center gap-1.5">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-[#8fae6a]"></div>
+                                    Air-conditioned
+                                 </div>
+                                 <div className="flex items-center gap-1.5">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-[#8fae6a]"></div>
+                                    CCTV Secured
+                                 </div>
+                                 <div className="flex items-center gap-1.5">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-[#8fae6a]"></div>
+                                    Modern whiteboard
+                                 </div>
+                                 <div className="flex items-center gap-1.5">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-[#8fae6a]"></div>
+                                    Clean water
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+
+                        <div className="mt-8 pt-6 border-t border-[#f2eadc] space-y-4">
+                           <p className="text-sm text-gray-500 font-bold italic leading-tight">
+                              "Step in during working hours or schedule a demo class to experience this premium setup live!"
+                           </p>
+
+                           <Link
+                              to="/admission"
+                              onClick={() => setActivePhoto(null)}
+                              className="w-full bg-[#8fae6a] hover:bg-[#7b9858] text-white font-heading font-bold text-sm uppercase tracking-wide py-3.5 rounded-full shadow-sm transition-all text-center block"
+                           >
+                              Book Free Demo Here
+                           </Link>
+                        </div>
+                     </div>
+                  </motion.div>
+               </motion.div>
+            )}
+         </AnimatePresence>
       </section>
 
       {/* Pre-footer Banner */}

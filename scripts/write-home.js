@@ -81,7 +81,7 @@ export function Home() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="w-full relative">
           <div className="relative inline-block mb-8">
             <h1 className="text-5xl md:text-7xl font-heading font-black text-[#8fae6a] leading-[1.1] z-10 relative">
-              Quality Coaching for School Students <br/> from Class 1st to 12th
+              Quality Coaching for K-12
             </h1>
             {/* Hand-drawn scribble under heading */}
             <svg className="absolute -bottom-6 left-0 w-full h-8 text-[#f6e191] -z-10" viewBox="0 0 400 20" preserveAspectRatio="none">
@@ -192,7 +192,7 @@ export function Home() {
       {/* Courses Cards Section */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-8 relative z-10">
          <div className="text-center mb-16 relative">
-            <h2 className="text-5xl font-heading font-black text-[#8fae6a]">Courses Offered</h2>
+            <h2 className="text-5xl font-heading font-black text-[#8fae6a]">K-12 Programs Offered</h2>
             {/* Little doodle */}
             <Pencil className="absolute -top-6 right-1/4 text-[#f0c8e1] w-10 h-10 rotate-45 hidden md:block" />
          </div>
